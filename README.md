@@ -1,65 +1,67 @@
-# 🏷️ PricePilot
+# 📈 PricePilot - Multi-Site Price Tracker Dashboard
 
-Multi-Site Price Tracker with Dashboard, Alerts, and Trend History.
+PricePilot is a Python-based web scraper and real-time price tracker for products across e-commerce platforms like Amazon. It includes a beautiful interactive dashboard to monitor price trends and receive email alerts when prices drop.
 
-## 📦 Features
+## 🚀 Features
 
-- ✅ Track prices from Amazon (eBay/Etsy placeholders removed for now)
-- 📊 Interactive Streamlit Dashboard with trends
-- ✉️ Email alerts for price drops
-- 📸 Screenshot logging for debugging
-- 💾 SQLite databases: `tracker.db` (URLs), `prices.db` (price history)
+- ✅ Multi-product tracking
+- 🌐 Powered by [Playwright](https://playwright.dev/python/)
+- 📊 Real-time Streamlit dashboard
+- 📩 Email alerts on price drops
+- 🔎 Smart fallback scraping logic
+- 📦 SQLite database for persistence
 
-## 🚀 Quickstart
+## 🛠️ Tech Stack
 
-### 1. Install dependencies
+- Python 3.10+
+- Playwright (async)
+- Streamlit
+- SQLite
+- smtplib (for sending emails)
 
-```bash
-pip install -r requirements.txt
-```
+## 📸 Demo
 
-### 2. Add URLs to track
+![Dashboard Screenshot](screenshot.png)
 
-```bash
-python scraper.py --add https://a.co/d/example
-```
-
-### 3. Run scraper manually
-
-```bash
-python scraper.py
-```
-
-### 4. Launch dashboard
-
-```bash
-streamlit run dashboard.py
-```
-
-## 🧠 Project Structure
+## 📂 Project Structure
 
 ```
 PricePilot/
-│
-├── scraper.py           # Scrapes all active product URLs
-├── dashboard.py         # Streamlit dashboard with charts and tables
-├── db_utils.py          # URL management + cascade delete logic
-├── email_utils.py       # Sends alert emails (optional)
-│
-├── prices.db            # Stores scraped price history
-├── tracker.db           # Stores tracked product URLs
-│
-├── sites/
-│   └── amazon.py        # Site-specific scraping logic
-│
-├── screenshots/         # Automatic debug screenshots
-├── .gitignore
-├── README.md
-└── requirements.txt
+├── sites/                  # Site-specific scrapers (e.g., amazon.py)
+├── scraper.py              # Main async scraper
+├── dashboard.py            # Streamlit UI
+├── db_utils.py             # SQLite helpers
+├── email_utils.py          # Email alerting
+├── requirements.txt
+├── .env.sample             # Sample environment config
+└── README.md
 ```
 
-## ⚙️ Notes
+## ⚙️ Setup Instructions
 
-- ❗ Product screenshots are saved in `screenshots/`
-- ❗ Only Amazon works currently – you can extend to other sites
-- ✔️ Tested with Playwright stealth mode + rotating user-agents
+1. **Install dependencies**
+   ```bash
+   pip install -r requirements.txt
+   playwright install
+   ```
+
+2. **Set environment variables**
+   Copy `.env.sample` to `.env` and fill in your email credentials.
+
+3. **Run the scraper**
+   ```bash
+   python scraper.py
+   ```
+
+4. **Launch the dashboard**
+   ```bash
+   streamlit run dashboard.py
+   ```
+
+## ✉️ Email Alerts
+
+The app can send you an email alert whenever a price drops. Just enable the toggle in the dashboard and set your email settings in `.env`.
+
+## 📜 License
+
+This project is licensed under the MIT License.
