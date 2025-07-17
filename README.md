@@ -1,145 +1,65 @@
-# PricePilot
+# 🏷️ PricePilot
 
-**PricePilot** is a modern, extensible multi-site price tracker for e-commerce platforms. It scrapes product prices from Amazon, eBay, and Digikala (Amazon implemented, others ready for extension), stores them in an SQLite database, and visualizes price trends in a Streamlit dashboard.
+Multi-Site Price Tracker with Dashboard, Alerts, and Trend History.
 
----
+## 📦 Features
 
-## 🚀 Features
-- **Multi-site scraping**: Modular architecture for Amazon, eBay, Digikala (Amazon ready, others easy to add)
-- **Automated price tracking**: Schedule or run scrapes on demand
-- **Historical price storage**: All data saved in SQLite
-- **Interactive dashboard**: Visualize trends, filter, and export data
-- **Email alerts**: Get notified of price drops
-- **Proxy & stealth support**: Bypass anti-bot measures
-- **Easy extensibility**: Add new sites with minimal code
+- ✅ Track prices from Amazon (eBay/Etsy placeholders removed for now)
+- 📊 Interactive Streamlit Dashboard with trends
+- ✉️ Email alerts for price drops
+- 📸 Screenshot logging for debugging
+- 💾 SQLite databases: `tracker.db` (URLs), `prices.db` (price history)
 
----
+## 🚀 Quickstart
 
-## 🛠 Technologies Used
-- [Playwright](https://playwright.dev/) (web scraping)
-- [playwright-stealth](https://github.com/AtuboDad/playwright-stealth) (anti-bot)
-- [Streamlit](https://streamlit.io/) (dashboard)
-- [pandas](https://pandas.pydata.org/) (data analysis)
-- [SQLAlchemy](https://www.sqlalchemy.org/) (ORM)
-- [aiosqlite](https://github.com/omnilib/aiosqlite) (async SQLite)
-- [openpyxl](https://openpyxl.readthedocs.io/) (Excel export)
-- [schedule](https://schedule.readthedocs.io/) (job scheduling)
+### 1. Install dependencies
 
----
-
-## ⚡ Quickstart
-
-### 1. Clone the repository
-```bash
-git clone <repository-url>
-cd PricePilot
-```
-
-### 2. Create and activate a virtual environment
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
-
-### 3. Install dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Install Playwright browsers (one-time)
+### 2. Add URLs to track
+
 ```bash
-playwright install
+python scraper.py --add https://a.co/d/example
 ```
 
-### 5. (Optional) Configure email alerts
-Create a `.env` file in the project root:
-```env
-SMTP_SERVER=smtp.gmail.com
-SMTP_PORT=587
-EMAIL_USER=your-email@gmail.com
-EMAIL_PASSWORD=your-app-password
+### 3. Run scraper manually
+
+```bash
+python scraper.py
 ```
 
----
+### 4. Launch dashboard
 
-## 📈 Usage
-
-### Run the Scraper
-- **One-time scrape:**
-  ```bash
-  python scraper.py --once
-  ```
-- **Scheduled scraping (daily at 10:00 AM):**
-  ```bash
-  python scraper.py
-  ```
-
-### Run the Dashboard
 ```bash
 streamlit run dashboard.py
 ```
-Visit [http://localhost:8501](http://localhost:8501) in your browser.
 
-### Add Product URLs
-1. Open the dashboard sidebar
-2. Enter the product URL (Amazon only, for now)
-3. Click "Add URL" — tracking starts automatically
+## 🧠 Project Structure
 
----
-
-## 🖼 Example Dashboard
-
-![Dashboard Screenshot](screenshots/dashboard_example.png)
-
----
-
-## 🧩 Extending PricePilot
-
-To add a new site (e.g., eBay, Digikala):
-1. Create a new module in `sites/` (e.g., `ebay.py`)
-2. Implement a `scrape_product(page, url, ...)` async function
-3. Register the site in `scraper.py`'s `SITE_HANDLERS`
-4. Update the dashboard to allow selecting the new source
-
----
-
-## 🐞 Troubleshooting
-- **NA prices:** Check screenshots in `screenshots/` for errors
-- **Bot detection:** Try different user agents or proxies
-- **Database errors:** Ensure you have write permissions
-- **Email not working:** Check your `.env` SMTP settings
-
----
-
-## 📁 Project Structure
 ```
 PricePilot/
-├── sites/           # Site-specific scrapers (amazon.py, etc.)
-├── dashboard.py     # Streamlit dashboard
-├── scraper.py       # Main scraping logic
-├── db_utils.py      # Database utilities
-├── email_utils.py   # Email alert logic
-├── requirements.txt # Python dependencies
-├── prices.db        # Price history database
-├── tracker.db       # Product tracking database
-├── screenshots/     # Debug screenshots
+│
+├── scraper.py           # Scrapes all active product URLs
+├── dashboard.py         # Streamlit dashboard with charts and tables
+├── db_utils.py          # URL management + cascade delete logic
+├── email_utils.py       # Sends alert emails (optional)
+│
+├── prices.db            # Stores scraped price history
+├── tracker.db           # Stores tracked product URLs
+│
+├── sites/
+│   └── amazon.py        # Site-specific scraping logic
+│
+├── screenshots/         # Automatic debug screenshots
+├── .gitignore
+├── README.md
+└── requirements.txt
 ```
 
----
+## ⚙️ Notes
 
-## 🤝 Contributing
-1. Fork the repo
-2. Create a feature branch
-3. Make changes and add tests
-4. Submit a pull request
-
----
-
-## 📄 License
-MIT License. See [LICENSE](LICENSE).
-
----
-
-## ⚠️ Disclaimer
-This tool is for educational and demonstration purposes. Please respect websites' terms of service and robots.txt. The authors are not responsible for misuse.
-# PricePilot
+- ❗ Product screenshots are saved in `screenshots/`
+- ❗ Only Amazon works currently – you can extend to other sites
+- ✔️ Tested with Playwright stealth mode + rotating user-agents

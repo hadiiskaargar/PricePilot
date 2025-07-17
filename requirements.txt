@@ -1,8 +1,5 @@
-streamlit
-pandas
-sqlalchemy
-aiosqlite
 playwright
 playwright-stealth
-openpyxl
-schedule 
+pandas
+matplotlib
+streamlit
