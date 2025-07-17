@@ -3,5 +3,6 @@ pandas
 sqlalchemy
 aiosqlite
 playwright
+playwright-stealth
 openpyxl
 schedule 

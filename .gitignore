@@ -1,1 +1,47 @@
-.env 
+# Ignore local DBs and system files
+prices.db
+tracker.db
+.DS_Store
+sites/.DS_Store
+__pycache__/
+*.pyc
+.python-version
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environments
+venv/
+env/
+.venv/
+
+# IDEs and editors
+.vscode/
+.idea/
+*.swp
+
+# macOS system files
+.DS_Store
+
+# Playwright
+playwright-report/
+*.log
+
+# Database / local output
+*.db
+*.sqlite
+*.sqlite3
+screenshots/
+*.bak
+
+# Environment variables
+.env
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Misc
+*.cache
+ 

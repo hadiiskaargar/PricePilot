@@ -15,7 +15,7 @@ st.title("📈 Multi-Site Price Tracker Dashboard")
 st.sidebar.header("Add Product URL")
 with st.sidebar.form("add_url_form"):
     new_url = st.text_input("Product URL", "")
-    new_source = st.selectbox("Source", ["amazon", "ebay", "etsy"])
+    new_source = st.selectbox("Source", ["amazon"])
     submitted = st.form_submit_button("Add URL")
     if submitted and new_url:
         add_url(new_url.strip(), new_source)
@@ -158,7 +158,7 @@ latest = filtered_df.sort_values('date').groupby('product_name').tail(1)
 for _, row in latest.iterrows():
     st.metric(
         label=row['product_name'],
-        value=f"${row['price'] if pd.notnull(row['price']) else 'NA'}",
+        value=f"${row['price']:.2f}" if pd.notnull(row['price']) else "N/A",
         delta=None,
         help=f"{row['url']} | Availability: {row['availability']}"
     )

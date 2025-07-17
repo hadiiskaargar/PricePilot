@@ -30,17 +30,11 @@ def clean_availability(avail):
 # Detect site from URL and delegate to site-specific handler
 SITE_HANDLERS = {
     'amazon': 'sites.amazon',
-    'ebay': 'sites.ebay',
-    'etsy': 'sites.etsy',
 }
 
 def detect_site(source):
     if source == 'amazon':
         return 'amazon'
-    elif source == 'ebay':
-        return 'ebay'
-    elif source == 'etsy':
-        return 'etsy'
     return None
 
 async def scrape_product(page, url):
@@ -137,9 +131,26 @@ async def save_to_db(results):
             # Get product id
             prod = await session.execute(select(Product).where(Product.url == row['url']))
             prod_id = prod.scalar_one().id
-            # Insert price history
-            price_val = float(row['price']) if row['price'] not in (None, '', 'NA') else None
+            # Prepare price value
+            price_val = None
+            try:
+                if row['price'] not in (None, '', 'NA') and not callable(row['price']) and not isinstance(row['price'], str) or (isinstance(row['price'], str) and row['price'].replace('.', '', 1).isdigit()):
+                    price_val = float(row['price'])
+            except Exception:
+                price_val = None
             today = datetime.now().date()
+            # Delete any existing price for this product and today
+            await session.execute(
+                delete(PriceHistory).where(
+                    PriceHistory.product_id == prod_id,
+                    PriceHistory.date == today
+                )
+            )
+            await session.commit()
+            # Insert new price history record
+            ph = PriceHistory(product_id=prod_id, date=today, price=price_val, availability=row['availability'])
+            session.add(ph)
+            await session.commit()
             # Get previous price (before today)
             prev = await session.execute(
                 select(PriceHistory).where(
@@ -148,20 +159,6 @@ async def save_to_db(results):
                 ).order_by(PriceHistory.date.desc())
             )
             prev_row = prev.scalars().first()
-            # Check if record already exists
-            existing = await session.execute(
-                select(PriceHistory).where(
-                    PriceHistory.product_id == prod_id,
-                    PriceHistory.date == today
-                )
-            )
-            if existing.scalar() is None:
-                ph = PriceHistory(product_id=prod_id, date=today, price=price_val, availability=row['availability'])
-                session.add(ph)
-                await session.commit()
-            else:
-                print(f"Skipped duplicate entry for product_id={prod_id} on {today}")
-
             # Price drop alert
             if email_enabled and prev_row and prev_row.price is not None and price_val is not None and price_val < prev_row.price:
                 alert_key = (prod_id, prev_row.price, price_val)
